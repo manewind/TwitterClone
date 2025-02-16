@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"context"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 type User struct {
 	Username       string
@@ -16,5 +21,9 @@ type User struct {
 }
 
 type UserService interface {
-	CreateUser() error
+	UserExist(context.Context, *pgxpool.Pool, User) (bool, error)
+	InsertUser(context.Context, *pgxpool.Pool, User) error
+	DeleteUser(context.Context, *pgxpool.Pool, User) error
+	UpdateUser(context.Context, *pgxpool.Pool, User) error
+	ReadUser(context.Context) error
 }
