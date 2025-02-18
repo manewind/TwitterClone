@@ -3,8 +3,6 @@ package models
 import (
 	"context"
 	"time"
-
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type User struct {
@@ -20,10 +18,11 @@ type User struct {
 	IsVerified     bool
 }
 
-type UserService interface {
-	UserExist(context.Context, *pgxpool.Pool, User) (bool, error)
-	InsertUser(context.Context, *pgxpool.Pool, User) error
-	DeleteUser(context.Context, *pgxpool.Pool, User) error
-	UpdateUser(context.Context, *pgxpool.Pool, User) error
-	ReadUser(context.Context) error
+type UserInterface interface {
+	UserExist(context.Context, User) (bool, error)
+	InsertUser(context.Context, User) error
+	CreateUser(context.Context, User) error
+	// DeleteUser(context.Context, User) error
+	// UpdateUser(context.Context, User) error
+	// ReadUser(context.Context) error
 }

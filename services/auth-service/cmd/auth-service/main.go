@@ -2,6 +2,7 @@ package main
 
 import (
 	"auth-services/internal/config"
+	"auth-services/internal/controller"
 	"auth-services/internal/db"
 	"auth-services/internal/models"
 	"auth-services/internal/service"
@@ -37,9 +38,9 @@ func main() {
 	pool.Ping(context.Background())
 
 	sampleUser := models.User{
-		Username:       "jsmith25",
-		Email:          "john.smith@example.com37",
-		FullName:       "John Smith",
+		Username:       "jsmith252344j",
+		Email:          "john.smith@example.com37fdfsdf",
+		FullName:       "John Smith21313",
 		PasswordHash:   "new_hashed_password",
 		ProfilePicture: "https://example.com/jsmith.jpg",
 		Bio:            "Full-Stack Developer with a passion for open-source projects.",
@@ -50,17 +51,20 @@ func main() {
 	}
 
 	userService := service.NewUserService(pool.DB)
-
-	err = userService.CreateUser(context.Background(), sampleUser)
+	userController := controller.NewUserController(userService)
+	http.HandleFunc("/create", userController.CreateUserController)
 	if err != nil {
 		log.Fatal("error created user: %w", err)
 	} else {
 		log.Println("User created successfully")
 	}
 
-	port := config.NewAppConfig().Port
-	log.Printf("Server is starting on port %s\n", port)
-	if err := http.ListenAndServe(port, nil); err != nil {
-		log.Fatal("error starring server: %w\n", err)
-	}
+	go func() {
+		port := config.NewAppConfig().Port
+		log.Printf("Server is starting on port %s\n", port)
+		if err := http.ListenAndServe(port, nil); err != nil {
+			log.Fatal("error starring server: %w\n", err)
+		}
+	}()
+
 }
