@@ -8,15 +8,20 @@ import (
 	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"go.uber.org/zap"
 )
 
 type UserService struct {
 	userRepo *repository.UserRepository
+	logger   *zap.Logger
 }
 
-func NewUserService(pool *pgxpool.Pool) models.UserInterface {
+func NewUserService(pool *pgxpool.Pool, logger *zap.Logger) models.UserInterface {
 	userRepo := repository.NewUserRepository(pool)
-	return &UserService{userRepo: userRepo}
+	return &UserService{
+		userRepo: userRepo,
+		logger:   logger,
+	}
 
 }
 
@@ -26,6 +31,10 @@ func (s *UserService) UserExist(ctx context.Context, user models.User) (bool, er
 
 func (s *UserService) InsertUser(ctx context.Context, user models.User) error {
 	return s.userRepo.InsertUser(ctx, user)
+}
+
+func (s *UserService) GetLogger() *zap.Logger {
+	return s.logger
 }
 
 func (s *UserService) CreateUser(ctx context.Context, user models.User) error {
